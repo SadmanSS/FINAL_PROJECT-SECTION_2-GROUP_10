@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:minimart/providers/cart_provider.dart';
+import 'package:minimart/providers/auth_provider.dart';
 import 'package:minimart/providers/orders_provider.dart';
 import 'package:minimart/screens/order_confirmation_page.dart';
 import 'package:minimart/theme/app_colors.dart';
@@ -19,6 +20,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      if (authProvider.userData != null) {
+        setState(() {
+          _nameController.text = authProvider.userData!['name'] ?? '';
+          _phoneController.text = authProvider.userData!['phoneNumber'] ?? '';
+          // Also pre-fill address if location is available
+          if (authProvider.userData!['location'] != null) {
+            _addressController.text = authProvider.userData!['location'];
+          }
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

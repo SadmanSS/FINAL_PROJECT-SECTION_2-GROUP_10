@@ -123,6 +123,7 @@ class ProductGridItem extends StatelessWidget {
                                       product.id,
                                       product.price,
                                       product.name,
+                                      product.imageUrl,
                                     );
                                   },
                                   child: Container(
@@ -148,6 +149,7 @@ class ProductGridItem extends StatelessWidget {
                                     product.id,
                                     product.price,
                                     product.name,
+                                    product.imageUrl,
                                   );
                                   ScaffoldMessenger.of(
                                     context,

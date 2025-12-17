@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isObscure = true;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -154,91 +155,103 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () async {
-                    final email = _emailController.text.trim();
-                    final password = _passwordController.text.trim();
+                  onPressed: _isLoading
+                      ? null
+                      : () async {
+                          final email = _emailController.text.trim();
+                          final password = _passwordController.text.trim();
 
-                    if (email.isEmpty || password.isEmpty) {
-                      CustomSnackBar.show(
-                        context,
-                        "Please fill in all fields",
-                        isError: true,
-                      );
-                      return;
-                    }
+                          if (email.isEmpty || password.isEmpty) {
+                            CustomSnackBar.show(
+                              context,
+                              "Please fill in all fields",
+                              isError: true,
+                            );
+                            return;
+                          }
 
-                    try {
-                      await Provider.of<AuthProvider>(
-                        context,
-                        listen: false,
-                      ).signIn(email, password);
+                          setState(() {
+                            _isLoading = true;
+                          });
 
-                      if (context.mounted) {
-                        CustomSnackBar.show(context, "Logged in successfully!");
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MainScreen(),
-                          ),
-                        );
-                      }
-                    } catch (e) {
-                      if (context.mounted) {
-                        if (e.toString().contains("Email not verified")) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text("Email Not Verified"),
-                              content: const Text(
-                                "Please verify your email address to log in. Would you like to resend the verification email?",
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text("Cancel"),
+                          try {
+                            await Provider.of<AuthProvider>(
+                              context,
+                              listen: false,
+                            ).signIn(email, password);
+
+                            if (context.mounted) {
+                              CustomSnackBar.show(
+                                context,
+                                "Logged in successfully!",
+                              );
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MainScreen(),
                                 ),
-                                TextButton(
-                                  onPressed: () async {
-                                    Navigator.pop(context);
-                                    try {
-                                      await Provider.of<AuthProvider>(
-                                        context,
-                                        listen: false,
-                                      ).resendVerificationEmail(
-                                        email,
-                                        password,
-                                      );
-                                      if (context.mounted) {
-                                        CustomSnackBar.show(
-                                          context,
-                                          "Verification email sent.",
-                                        );
-                                      }
-                                    } catch (e) {
-                                      if (context.mounted) {
-                                        CustomSnackBar.show(
-                                          context,
-                                          e.toString(),
-                                          isError: true,
-                                        );
-                                      }
-                                    }
-                                  },
-                                  child: const Text("Resend"),
-                                ),
-                              ],
-                            ),
-                          );
-                        } else {
-                          CustomSnackBar.show(
-                            context,
-                            e.toString(),
-                            isError: true,
-                          );
-                        }
-                      }
-                    }
-                  },
+                              );
+                            }
+                          } catch (e) {
+                            if (context.mounted) {
+                              setState(() {
+                                _isLoading = false;
+                              });
+                              if (e.toString().contains("Email not verified")) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text("Email Not Verified"),
+                                    content: const Text(
+                                      "Please verify your email address to log in. Would you like to resend the verification email?",
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text("Cancel"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                          try {
+                                            await Provider.of<AuthProvider>(
+                                              context,
+                                              listen: false,
+                                            ).resendVerificationEmail(
+                                              email,
+                                              password,
+                                            );
+                                            if (context.mounted) {
+                                              CustomSnackBar.show(
+                                                context,
+                                                "Verification email sent.",
+                                              );
+                                            }
+                                          } catch (e) {
+                                            if (context.mounted) {
+                                              CustomSnackBar.show(
+                                                context,
+                                                e.toString(),
+                                                isError: true,
+                                              );
+                                            }
+                                          }
+                                        },
+                                        child: const Text("Resend"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                CustomSnackBar.show(
+                                  context,
+                                  e.toString(),
+                                  isError: true,
+                                );
+                              }
+                            }
+                          }
+                        },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     shape: RoundedRectangleBorder(
@@ -246,14 +259,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    "Log In",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          "Log In",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 24),

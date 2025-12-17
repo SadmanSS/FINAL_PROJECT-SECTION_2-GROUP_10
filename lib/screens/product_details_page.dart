@@ -132,7 +132,6 @@ class ProductDetailsPage extends StatelessWidget {
         ],
       ),
       bottomSheet: Container(
-        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: AppColors.surface,
           boxShadow: [
@@ -144,51 +143,59 @@ class ProductDetailsPage extends StatelessWidget {
           ],
         ),
         child: SafeArea(
-          child: SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: Consumer<CartProvider>(
-              builder: (context, cart, child) {
-                final isInCart = cart.items.containsKey(product.id);
-                return ElevatedButton(
-                  onPressed: () {
-                    if (isInCart) {
-                      cart.removeSingleItem(product.id);
-                    } else {
-                      cart.addItem(product.id, product.price, product.name);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("${product.name} added to cart!"),
-                          duration: const Duration(seconds: 2),
-                          action: SnackBarAction(
-                            label: 'UNDO',
-                            onPressed: () {
-                              cart.removeSingleItem(product.id);
-                            },
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: Consumer<CartProvider>(
+                builder: (context, cart, child) {
+                  final isInCart = cart.items.containsKey(product.id);
+                  return ElevatedButton(
+                    onPressed: () {
+                      if (isInCart) {
+                        cart.removeSingleItem(product.id);
+                      } else {
+                        cart.addItem(
+                          product.id,
+                          product.price,
+                          product.name,
+                          product.imageUrl,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("${product.name} added to cart!"),
+                            duration: const Duration(seconds: 2),
+                            action: SnackBarAction(
+                              label: 'UNDO',
+                              onPressed: () {
+                                cart.removeSingleItem(product.id);
+                              },
+                            ),
                           ),
-                        ),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isInCart
-                        ? AppColors.secondary
-                        : AppColors.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isInCart
+                          ? AppColors.secondary
+                          : AppColors.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 0,
                     ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    isInCart ? "Remove from Cart" : "Add to Cart",
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                    child: Text(
+                      isInCart ? "Remove from Cart" : "Add to Cart",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ),

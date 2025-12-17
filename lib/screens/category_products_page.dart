@@ -41,18 +41,20 @@ class CategoryProductsPage extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: products.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.75,
-          crossAxisSpacing: 15,
-          mainAxisSpacing: 15,
+      body: SafeArea(
+        child: GridView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: products.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 0.75,
+            crossAxisSpacing: 15,
+            mainAxisSpacing: 15,
+          ),
+          itemBuilder: (context, index) {
+            return ProductGridItem(product: products[index]);
+          },
         ),
-        itemBuilder: (context, index) {
-          return ProductGridItem(product: products[index]);
-        },
       ),
     );
   }

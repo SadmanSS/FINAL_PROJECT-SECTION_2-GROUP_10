@@ -42,63 +42,25 @@ class _ShopPageState extends State<ShopPage> {
                 child: PageView(
                   children: [
                     // Banner 1
+                    // Banner 1
                     Container(
                       margin: const EdgeInsets.only(right: 10),
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF6C5CE7), Color(0xFFA29BFE)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(
-                              0xFF6C5CE7,
-                            ).withValues(alpha: 0.3),
+                            color: Colors.black.withValues(alpha: 0.1),
                             blurRadius: 10,
                             offset: const Offset(0, 5),
                           ),
                         ],
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            right: -20,
-                            bottom: -20,
-                            child: Icon(
-                              Icons.shopping_bag_outlined,
-                              size: 140,
-                              color: Colors.white.withValues(alpha: 0.2),
-                            ),
+                        image: const DecorationImage(
+                          image: ResizeImage(
+                            AssetImage('assets/banner1.png'),
+                            width: 600,
                           ),
-                          const Padding(
-                            padding: EdgeInsets.all(24.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Summer Sale",
-                                  style: TextStyle(
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  "Up to 50% OFF",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.white70,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     // Banner 2

@@ -63,6 +63,7 @@ class OrdersProvider with ChangeNotifier {
                   name: item['title'],
                   quantity: item['quantity'],
                   price: item['price'],
+                  imageUrl: item['imageUrl'] ?? '',
                 ),
               )
               .toList(),
@@ -105,6 +106,7 @@ class OrdersProvider with ChangeNotifier {
                     'title': cp.name,
                     'quantity': cp.quantity,
                     'price': cp.price,
+                    'imageUrl': cp.imageUrl,
                   },
                 )
                 .toList(),

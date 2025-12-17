@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:minimart/theme/app_colors.dart';
-import 'package:minimart/widgets/location_select.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -11,14 +10,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 5,
-      leadingWidth: 140,
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 16.0),
-        child: SizedBox(
-          height: 40,
-          child: const LocationSelect(),
-        ),
-      ),
+
       title: Text(
         title,
         style: const TextStyle(

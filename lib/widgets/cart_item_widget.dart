@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:minimart/providers/cart_provider.dart';
 import 'package:minimart/theme/app_colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:minimart/services/image_cache_service.dart';
 
 class CartItemWidget extends StatelessWidget {
   final String productId;
@@ -65,15 +67,28 @@ class CartItemWidget extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListTile(
-            leading: Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: AppColors.accent,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Center(
-                child: Icon(Icons.shopping_bag, color: AppColors.primary),
+            leading: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: SizedBox(
+                width: 60,
+                height: 60,
+                child: CachedNetworkImage(
+                  imageUrl: item.imageUrl,
+                  cacheManager: ImageCacheService.customCacheManager,
+                  fit: BoxFit.cover,
+                  memCacheWidth: 200,
+                  fadeInDuration: Duration.zero,
+                  placeholder: (context, url) => Container(
+                    color: Colors.grey[200],
+                    child: const Center(
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.grey[200],
+                    child: const Icon(Icons.broken_image, color: Colors.grey),
+                  ),
+                ),
               ),
             ),
             title: Text(
